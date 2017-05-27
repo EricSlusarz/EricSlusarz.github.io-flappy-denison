@@ -1,9 +1,9 @@
 var DEBUG = false;
-var SPEED = 690;
+var SPEED = 620;
 var GRAVITY = 40;
 var FLAP = 620;
 var SPAWN_RATE = 1 / 1.2;
-var OPENING = 134;
+var OPENING = 144;
 
 
 WebFontConfig = {
@@ -45,8 +45,8 @@ var game = new Phaser.Game(
 function preload() {
     var assets = {
         spritesheet: {
-            birdie: ['assets/flappy-denison.png', 50, 50],
-            clouds: ['assets/cloudlogo.png', 300, 300]
+            birdie: ['assets/flappy-pig.png', 50, 50],
+            clouds: ['assets/manifest.png', 646, 217]
         },
         image: {
             finger: ['assets/finger.png'],
@@ -95,7 +95,7 @@ function create() {
     bg.beginFill(0xDDEEFF, 1);
     bg.drawRect(0, 0, game.world.width, game.world.height);
     bg.endFill();
-    // Credits 'yo
+
     credits = game.add.text(
         game.world.width / 2,
         10,
@@ -129,9 +129,9 @@ function create() {
         game.world.height / 4,
         "",
         {
-            font: '16px "Press Start 2P"',
+            font: '15px "Press Start 2P"',
             fill: '#fff',
-            stroke: '#430',
+            stroke: '#009BDE',
             strokeThickness: 4,
             align: 'center'
         }
@@ -145,7 +145,7 @@ function create() {
         {
             font: '8px "Press Start 2P"',
             fill: '#fff',
-            stroke: '#430',
+            stroke: '#009BDE',
             strokeThickness: 4,
             align: 'center'
         }
@@ -154,12 +154,12 @@ function create() {
     // Add game over text
     gameOverText = game.add.text(
         game.world.width / 2,
-        game.world.height / 2,
+        game.world.height / 2 -40,
         "",
         {
-            font: '16px "Press Start 2P"',
+            font: '15px "Press Start 2P"',
             fill: '#fff',
-            stroke: '#430',
+            stroke: '#00236A',
             strokeThickness: 4,
             align: 'center'
         }
@@ -186,8 +186,8 @@ function reset() {
     gameOver = false;
     score = 0;
     credits.renderable = true;
-    scoreText.setText("Flappy\nDennison\nUniversity");
-    instText.setText("TOUCH TO FLAP\nBIRDIE WINGS");
+    scoreText.setText("WELCOME TO\nMANIFEST SOLUTIONS\nFLAPPY PIG");
+    instText.setText("TOUCH TO FLAP\nPIGGY WINGS");
     gameOverText.renderable = false;
     birdie.body.allowGravity = false;
     birdie.angle = 0;
@@ -226,22 +226,22 @@ function flap() {
 function spawnCloud() {
     cloudsTimer.stop();
 
-    var cloudY = Math.random() * game.height / 2;
+    var cloudY = game.height - 2;
     var cloud = clouds.create(
         game.width,
         cloudY,
         'clouds',
         Math.floor(4 * Math.random())
     );
-    var cloudScale = 2 + 2 * Math.random();
+    var cloudScale = 2 + 1.1 * Math.random();
     cloud.alpha = 2 / cloudScale;
     cloud.scale.setTo(cloudScale, cloudScale);
     cloud.body.allowGravity = false;
     cloud.body.velocity.x = -SPEED / cloudScale;
-    cloud.anchor.y = 0;
+    cloud.anchor.y = 1;
 
     cloudsTimer.start();
-    cloudsTimer.add(4 * Math.random());
+    cloudsTimer.add(7 * 1.8 + Math.random());
 }
 
 function o() {
@@ -295,13 +295,13 @@ function addScore(_, inv) {
 
 function setGameOver() {
     gameOver = true;
-    instText.setText("TOUCH BIRDIE\nTO TRY AGAIN");
+    instText.setText("TOUCH PIGGY\nTO TRY AGAIN");
     instText.renderable = true;
     var hiscore = window.localStorage.getItem('hiscore');
     hiscore = hiscore ? hiscore : score;
     hiscore = score > parseInt(hiscore, 10) ? score : hiscore;
     window.localStorage.setItem('hiscore', hiscore);
-    gameOverText.setText("GAMEOVER\nThanks For Playing\n Contact me at:\n 267-319-3816 or\n ericslusarz@gmail.com\nHIGH SCORE\n" + hiscore);
+    gameOverText.setText("GAMEOVER\nThanks For Playing\n Contact us at:\nPhone:(614)930-2800\nor\nFax:(614)930-2890\nHIGH SCORE:" + hiscore);
     gameOverText.renderable = true;
     // Stop all fingers
     fingers.forEachAlive(function(finger) {
@@ -345,7 +345,7 @@ function update() {
                 );
             }
             // Shake game over text
-            gameOverText.angle = Math.random() * 5 * Math.cos(game.time.now / 100);
+            gameOverText.angle =  0;
         } else {
             // Check game over
             game.physics.overlap(birdie, fingers, setGameOver);
